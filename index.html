@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <title>Family Game Night</title>
+  <meta name="description" content="Scorecards, games, players and timers for family game nights.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Game Night">
+  <meta name="theme-color" content="#6c4cf5">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="view"></main>
+
+  <div id="pill" hidden></div>
+
+  <nav id="tabbar">
+    <button class="tab" data-act="tab" data-tab="night"><span class="ti">🎲</span>Game Night</button>
+    <button class="tab" data-act="tab" data-tab="players"><span class="ti">🧑‍🤝‍🧑</span>Players</button>
+    <button class="tab" data-act="tab" data-tab="games"><span class="ti">🃏</span>Games</button>
+    <button class="tab" data-act="tab" data-tab="timer"><span class="ti">⏱️</span>Timer</button>
+  </nav>
+
+  <div id="sheet-root"></div>
+
+  <div id="alarm" class="alarm" hidden>
+    <div class="alarm-card">
+      <div class="alarm-emoji">⏰</div>
+      <h2>Time's up!</h2>
+      <button class="big-btn" data-act="dismissAlarm">OK!</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <canvas id="confetti"></canvas>
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+
+  <script src="app.js"></script>
+</body>
+</html>
