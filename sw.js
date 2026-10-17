@@ -1,5 +1,5 @@
 // Offline support: serve from cache instantly, refresh the cache in the background.
-const CACHE = 'fgn-v5';
+const CACHE = 'fgn-v6';
 const ASSETS = [
   './',
   './index.html',

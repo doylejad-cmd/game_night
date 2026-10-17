@@ -461,7 +461,7 @@ function goToTile(i) {
     n.idx = i;
     save();
     render();
-    window.scrollTo(0, 0);
+    scrollViewTop();
     return;
   }
   const c = $('#carousel');
@@ -900,7 +900,7 @@ const A = {
     if (el.dataset.m) S.ui.tmode = el.dataset.m;
     save();
     render();
-    window.scrollTo(0, 0);
+    scrollViewTop();
   },
   closeSheet() { closeSheet(); },
 
@@ -908,7 +908,7 @@ const A = {
   startSetup() {
     SETUP = { players: S.players.map((p) => p.id), games: [] };
     render();
-    window.scrollTo(0, 0);
+    scrollViewTop();
   },
   cancelSetup() { SETUP = null; render(); },
   pickPlayer(el) {
@@ -936,7 +936,7 @@ const A = {
     S.ui.view = 'tiles';
     save();
     render();
-    window.scrollTo(0, 0);
+    scrollViewTop();
     confetti(1200);
     toast('🎉 Let the games begin!');
   },
@@ -1178,7 +1178,7 @@ const A = {
     S.history.unshift(h);
     S.night = null;
     save(); render();
-    window.scrollTo(0, 0);
+    scrollViewTop();
     winnerSheet(h);
     confetti(3000);
     fanfare();
@@ -1554,12 +1554,34 @@ document.addEventListener('mousedown', (e) => { if (e.target.closest('.pm, .neg'
 // First touch anywhere unlocks sound on iPhone.
 document.addEventListener('pointerdown', unlockAudio, { once: true, capture: true });
 
+function scrollViewTop() {
+  const v = $('#view');
+  if (v) v.scrollTop = 0;
+}
+
+// iPhone slides the whole page up to make room for the keyboard and sometimes
+// doesn't slide it back. Put it back whenever the keyboard goes away.
+function resetPageShift() {
+  if (window.scrollY || document.documentElement.scrollTop || document.body.scrollTop) {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }
+}
+document.addEventListener('focusout', () => {
+  setTimeout(() => {
+    const a = document.activeElement;
+    if (!a || !a.matches || !a.matches('input, textarea')) resetPageShift();
+  }, 120);
+});
+
 // Keep pop-up sheets above the on-screen keyboard.
 if (window.visualViewport) {
   const vv = window.visualViewport;
   const upd = () => {
     const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
     document.documentElement.style.setProperty('--kb', kb + 'px');
+    if (kb === 0) resetPageShift();
   };
   vv.addEventListener('resize', upd);
   vv.addEventListener('scroll', upd);
