@@ -1575,21 +1575,6 @@ document.addEventListener('focusout', () => {
   }, 120);
 });
 
-// Home-screen apps on iPhone can report a screen height that's too short (about the
-// height of Safari's address bar), leaving a gap under the tab bar. When running from
-// the home screen, size the app to the phone's real screen height instead.
-const isHomeScreenApp = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-function sizeApp() {
-  if (!isHomeScreenApp) return;
-  const portrait = window.matchMedia('(orientation: portrait)').matches;
-  const screenH = portrait ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height);
-  const h = Math.max(window.innerHeight, document.documentElement.clientHeight, screenH || 0);
-  document.documentElement.style.setProperty('--app-h', h + 'px');
-}
-sizeApp();
-window.addEventListener('resize', sizeApp);
-window.addEventListener('orientationchange', () => setTimeout(sizeApp, 300));
-
 // Keep pop-up sheets above the on-screen keyboard.
 if (window.visualViewport) {
   const vv = window.visualViewport;

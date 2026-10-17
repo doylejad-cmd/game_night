@@ -15,37 +15,29 @@
   --tabbar-h: 66px;
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
-  /* Full app height. iPhone home-screen apps can under-report the screen height
-     (by about the size of Safari's address bar), so app.js replaces this with
-     the real screen height when running from the home screen. */
-  --app-h: 100vh;
   color-scheme: light;
   font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
-}
-@supports (height: 100lvh) {
-  :root { --app-h: 100lvh; }
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 /* The page itself never scrolls (only #view does), so iPhone can't leave the
    tab bar stranded mid-screen after the keyboard closes. Everything that sticks
-   to the screen edges is positioned inside <body>, which spans the full app height. */
+   to the screen edges is positioned inside <body>, which fills the visible area. */
 html {
   margin: 0;
   height: 100%;
   overflow: hidden;
-  background: linear-gradient(165deg, #5b6cff 0%, #8b5cff 40%, #d45cf0 75%, #ff7eb3 100%) #d45cf0;
+  /* Some iPhones leave a strip below the app's visible area and paint it with the
+     page's base color. White makes it blend into the tab bar. */
+  background: #fff;
 }
 body {
   margin: 0;
   overflow: hidden;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--app-h);
+  inset: 0;
   color: var(--ink);
-  background: #7b5cff;
+  background: transparent;
   overscroll-behavior-y: none;
   -webkit-font-smoothing: antialiased;
   -webkit-user-select: none;
