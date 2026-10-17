@@ -15,17 +15,35 @@
   --tabbar-h: 66px;
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
+  /* Full app height. iPhone home-screen apps can under-report the screen height
+     (by about the size of Safari's address bar), so app.js replaces this with
+     the real screen height when running from the home screen. */
+  --app-h: 100vh;
   color-scheme: light;
   font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@supports (height: 100lvh) {
+  :root { --app-h: 100lvh; }
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 /* The page itself never scrolls (only #view does), so iPhone can't leave the
-   tab bar stranded mid-screen after the keyboard closes. */
-html, body { margin: 0; height: 100%; overflow: hidden; }
+   tab bar stranded mid-screen after the keyboard closes. Everything that sticks
+   to the screen edges is positioned inside <body>, which spans the full app height. */
+html {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(165deg, #5b6cff 0%, #8b5cff 40%, #d45cf0 75%, #ff7eb3 100%) #d45cf0;
+}
 body {
+  margin: 0;
+  overflow: hidden;
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--app-h);
   color: var(--ink);
   background: #7b5cff;
   overscroll-behavior-y: none;
@@ -37,7 +55,7 @@ body {
 }
 body::before {
   content: "";
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: -1;
   background:
@@ -388,7 +406,7 @@ table.grid { border-collapse: separate; border-spacing: 0; min-width: 100%; }
 .dot { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; }
 
 /* ---------- Sheets ---------- */
-#sheet-root { position: fixed; inset: 0; z-index: 50; pointer-events: none; }
+#sheet-root { position: absolute; inset: 0; z-index: 50; pointer-events: none; }
 #sheet-root.open { pointer-events: auto; }
 .sheet-backdrop { position: absolute; inset: 0; background: rgba(30, 15, 70, .45); opacity: 0; transition: opacity .25s; }
 .sheet {
@@ -522,7 +540,7 @@ table.grid { border-collapse: separate; border-spacing: 0; min-width: 100%; }
 
 /* ---------- Floating bits ---------- */
 #tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; justify-content: space-around;
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; justify-content: space-around;
   padding: 8px 8px calc(8px + var(--sab)); background: rgba(255, 255, 255, .94);
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   border-radius: 24px 24px 0 0; box-shadow: 0 -6px 24px rgba(60, 30, 140, .18);
@@ -535,7 +553,7 @@ table.grid { border-collapse: separate; border-spacing: 0; min-width: 100%; }
 .tab.on { color: var(--primary); background: var(--soft); }
 .tab.on .ti { transform: scale(1.15) translateY(-1px); }
 
-#pill { position: fixed; z-index: 25; right: 14px; bottom: calc(var(--tabbar-h) + var(--sab) + 14px); display: flex; gap: 8px; }
+#pill { position: absolute; z-index: 25; right: 14px; bottom: calc(var(--tabbar-h) + var(--sab) + 14px); display: flex; gap: 8px; }
 #pill[hidden] { display: none; }
 #pill button {
   padding: 10px 14px; border-radius: 999px; background: #2a2350; color: #fff; font-weight: 800;
@@ -543,17 +561,17 @@ table.grid { border-collapse: separate; border-spacing: 0; min-width: 100%; }
 }
 
 #toast {
-  position: fixed; left: 50%; top: calc(var(--sat) + 12px); z-index: 95; transform: translate(-50%, -150%);
+  position: absolute; left: 50%; top: calc(var(--sat) + 12px); z-index: 95; transform: translate(-50%, -150%);
   background: #2a2350; color: #fff; padding: 12px 18px; border-radius: 999px; font-weight: 800; font-size: 15px;
   box-shadow: var(--shadow); transition: transform .3s cubic-bezier(.2, .9, .3, 1.2); pointer-events: none;
   max-width: calc(100% - 32px); text-align: center;
 }
 #toast.show { transform: translate(-50%, 0); }
 
-#confetti { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 90; pointer-events: none; display: none; }
+#confetti { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 90; pointer-events: none; display: none; }
 
 .alarm {
-  position: fixed; inset: 0; z-index: 80; display: grid; place-items: center;
+  position: absolute; inset: 0; z-index: 80; display: grid; place-items: center;
   background: rgba(255, 77, 109, .94); animation: flash 1s infinite;
 }
 .alarm[hidden] { display: none; }
